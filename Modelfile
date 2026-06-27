@@ -1,0 +1,14 @@
+FROM ./rocky-q4_k_m.gguf
+
+# Custom template to match Gemma 2 formatting and Rocky training prefix
+TEMPLATE """{{- if .Prompt }}<start_of_turn>user
+Speak like Rocky.
+
+{{ .Prompt }}<end_of_turn>
+{{- end }}<start_of_turn>model
+{{ .Response }}<end_of_turn>
+"""
+
+# Set stop tokens
+PARAMETER stop "<start_of_turn>"
+PARAMETER stop "<end_of_turn>"

@@ -17,19 +17,20 @@ fi
 cd "$LLAMA_DIR"
 
 echo "Installing llama.cpp Python requirements..."
-pip install -r requirements.txt -q
+uv pip install --index-strategy unsafe-best-match -r requirements.txt -q
 
 echo "Compiling llama.cpp binaries..."
-make -j"$(sysctl -n hw.logicalcpu)"
+cmake -B build
+cmake --build build --config Release -j"$(sysctl -n hw.logicalcpu)"
 
 echo ""
 echo "Converting to FP16 GGUF..."
-python convert_hf_to_gguf.py "../$MODEL_DIR" \
+../.venv/bin/python convert_hf_to_gguf.py "../$MODEL_DIR" \
     --outtype f16 \
     --outfile "../$F16_GGUF"
 
 echo "Quantizing to Q4_K_M..."
-./llama-quantize "../$F16_GGUF" "../$Q4_GGUF" Q4_K_M
+./build/bin/llama-quantize "../$F16_GGUF" "../$Q4_GGUF" Q4_K_M
 
 cd ..
 

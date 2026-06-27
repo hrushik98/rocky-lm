@@ -1,1 +1,10 @@
 .env
+.venv/
+llama.cpp/
+rocky-gemma-2b/
+rocky-task-output/
+adapters/
+*.gguf
+*.litertlm
+*.task
+.DS_Store
