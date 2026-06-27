@@ -1,6 +1,6 @@
 # Rocky LM
 
-Rocky LM is a custom conversational assistant fine-tuned from the base model **`google/gemma-2-2b-it`** (Gemma 2 2B Instruct) to speak and act like Rocky Balboa.
+Rocky LM is a custom conversational assistant fine-tuned from the base model **`google/gemma-2-2b-it`** (Gemma 2 2B Instruct) to speak and act like Rocky from Project Hailmary!
 
 ![Rocky Chat Screenshot](image.png)
 
