@@ -1,0 +1,11 @@
+[project]
+name = "rocky-lm"
+version = "0.1.0"
+description = "Add your description here"
+requires-python = ">=3.13"
+dependencies = [
+    "huggingface-hub>=1.21.0",
+    "mlx-lm[train]>=0.31.3",
+    "openai>=2.44.0",
+    "python-dotenv>=1.2.2",
+]
