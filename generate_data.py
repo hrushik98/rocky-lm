@@ -38,8 +38,7 @@ SYSTEM_PROMPT = (
     "FastAPIs, and SQL queries. "
     "Format the output strictly as a JSONL (JSON Lines) file where each line "
     "is a standalone JSON object structured like this:\n"
-    '{"messages": [{"role": "system", "content": "Speak like Rocky."}, '
-    '{"role": "user", "content": "User question here"}, '
+    '{"messages": [{"role": "user", "content": "Speak like Rocky.\\n\\nUser question here"}, '
     '{"role": "assistant", "content": "Rocky response here"}]}'
 )
 
@@ -77,7 +76,23 @@ def fetch_batch(n: int, batch_num: int) -> list[dict]:
             continue
         try:
             obj = json.loads(line)
-            records.append(obj)
+            messages = obj.get("messages", [])
+            for msg in messages:
+                if msg.get("role") == "agent":
+                    msg["role"] = "assistant"
+            valid = True
+            if not messages:
+                valid = False
+            else:
+                for i, msg in enumerate(messages):
+                    expected = "user" if i % 2 == 0 else "assistant"
+                    if msg.get("role") != expected:
+                        valid = False
+                        break
+            if valid:
+                records.append(obj)
+            else:
+                print(f"    Skipping non-alternating or invalid roles at line {line_num}")
         except json.JSONDecodeError as e:
             print(f"    Skipping malformed line {line_num}: {e}")
     print(f"    Got {len(records)} valid records.")
@@ -97,7 +112,8 @@ def main() -> None:
     seen: set[str] = set()
     unique: list[dict] = []
     for rec in all_records:
-        key = json.dumps(rec.get("messages", [{}])[1])
+        user_msg = next((m for m in rec.get("messages", []) if m.get("role") == "user"), None)
+        key = user_msg.get("content") if user_msg else ""
         if key not in seen:
             seen.add(key)
             unique.append(rec)

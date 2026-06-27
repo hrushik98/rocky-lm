@@ -65,8 +65,7 @@ def run_mlx(model_path: str, prompt: str | None) -> None:
 
     def infer(user_input: str) -> None:
         messages = [
-            {"role": "system", "content": ROCKY_SYSTEM},
-            {"role": "user", "content": user_input},
+            {"role": "user", "content": f"{ROCKY_SYSTEM}\n\n{user_input}"},
         ]
         formatted = tokenizer.apply_chat_template(
             messages, tokenize=False, add_generation_prompt=True
@@ -142,8 +141,7 @@ def run_gpu(model_path: str, prompt: str | None) -> None:
 
     def infer(user_input: str) -> None:
         messages = [
-            {"role": "system", "content": ROCKY_SYSTEM},
-            {"role": "user", "content": user_input},
+            {"role": "user", "content": f"{ROCKY_SYSTEM}\n\n{user_input}"},
         ]
         inputs = tokenizer.apply_chat_template(
             messages,
